@@ -8,7 +8,9 @@ import Part2.Types
 -- Написать функцию, которая преобразует значение типа
 -- ColorLetter в символ, равный первой букве значения
 prob6 :: ColorLetter -> Char
-prob6 = error "Implement me!"
+prob6 RED = 'R'
+prob6 GREEN = 'G'
+prob6 BLUE = 'B'
 
 ------------------------------------------------------------
 -- PROBLEM #7
@@ -16,7 +18,13 @@ prob6 = error "Implement me!"
 -- Написать функцию, которая проверяет, что значения
 -- находятся в диапазоне от 0 до 255 (границы входят)
 prob7 :: ColorPart -> Bool
-prob7 = error "Implement me!"
+prob7 cp = getValue cp >= 0 && getValue cp <= 255
+
+getValue :: ColorPart -> Int
+getValue cp = case cp of
+  Red x -> x
+  Green x -> x
+  Blue x -> x
 
 ------------------------------------------------------------
 -- PROBLEM #8
@@ -24,7 +32,10 @@ prob7 = error "Implement me!"
 -- Написать функцию, которая добавляет в соответствующее
 -- поле значения Color значение из ColorPart
 prob8 :: Color -> ColorPart -> Color
-prob8 = error "Implement me!"
+prob8 c cp = case cp of
+  Red x -> c { red = red c + x }
+  Blue x -> c { blue = blue c + x }
+  Green x -> c { green = green c + x }
 
 ------------------------------------------------------------
 -- PROBLEM #9
@@ -32,7 +43,10 @@ prob8 = error "Implement me!"
 -- Написать функцию, которая возвращает значение из
 -- ColorPart
 prob9 :: ColorPart -> Int
-prob9 = error "Implement me!"
+prob9 cp = case cp of
+  Red x -> x
+  Green x -> x
+  Blue x -> x
 
 ------------------------------------------------------------
 -- PROBLEM #10
@@ -40,14 +54,20 @@ prob9 = error "Implement me!"
 -- Написать функцию, которая возвращает компонент Color, у
 -- которого наибольшее значение (если такой единственный)
 prob10 :: Color -> Maybe ColorPart
-prob10 = error "Implement me!"
+prob10 c
+  | red c > green c && red c > blue c = Just (Red (red c))
+  | green c > red c && green c > blue c = Just (Green (green c))
+  | blue c > red c && blue c > green c = Just (Blue (blue c))
+  | otherwise = Nothing
 
 ------------------------------------------------------------
 -- PROBLEM #11
 --
 -- Найти сумму элементов дерева
 prob11 :: Num a => Tree a -> a
-prob11 = error "Implement me!"
+prob11 t = root t + sum (left t) + sum (right t)
+  where 
+    sum t = maybe 0 prob11 t
 
 ------------------------------------------------------------
 -- PROBLEM #12
@@ -58,7 +78,15 @@ prob11 = error "Implement me!"
 -- а все элементы правого поддерева -- не меньше элемента
 -- в узле)
 prob12 :: Ord a => Tree a -> Bool
-prob12 = error "Implement me!"
+prob12 t = all (< (root t)) (leftValues (left t)) && all (>= (root t)) (rightValues (right t))
+
+leftValues t = case t of
+  Nothing -> []
+  Just value -> [(root value)] ++ leftValues (left value)
+
+rightValues t = case t of
+  Nothing -> []
+  Just value -> [(root value)] ++ leftValues (left value)
 
 ------------------------------------------------------------
 -- PROBLEM #13
@@ -83,7 +111,11 @@ prob14 = error "Implement me!"
 -- Выполнить вращение дерева влево относительно корня
 -- (https://en.wikipedia.org/wiki/Tree_rotation)
 prob15 :: Tree a -> Tree a
-prob15 = error "Implement me!"
+prob15 t = maybe t leftRotation (right t)
+  where
+    leftRotation s = s { left = Just oldRoot }
+      where
+        oldRoot = t { right = left s }
 
 ------------------------------------------------------------
 -- PROBLEM #16
@@ -91,7 +123,11 @@ prob15 = error "Implement me!"
 -- Выполнить вращение дерева вправо относительно корня
 -- (https://en.wikipedia.org/wiki/Tree_rotation)
 prob16 :: Tree a -> Tree a
-prob16 = error "Implement me!"
+prob16 t = maybe t rightRotation (left t)
+  where 
+    rightRotation s = s { right = Just oldRoot }
+      where
+        oldRoot = t { left = right s }
 
 ------------------------------------------------------------
 -- PROBLEM #17
